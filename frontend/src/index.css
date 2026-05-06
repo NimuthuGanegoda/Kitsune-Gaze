@@ -23,11 +23,92 @@ body {
 }
 
 #root {
-  max-width: 1280px;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding: 4rem 2rem;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(196, 30, 58, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-logo a {
+  font-family: 'Georgia', serif;
+  font-size: 1.5rem;
+  color: #c41e3a;
+  text-decoration: none;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #ccc;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ff3e5e;
+}
+
+/* Footer */
+.footer {
   padding: 2rem;
   text-align: center;
+  border-top: 1px solid rgba(196, 30, 58, 0.1);
+  color: #666;
+  font-size: 0.8rem;
 }
+
+/* Typography for Pages */
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.page-container h2 {
+  color: #c41e3a;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-container p {
+  color: #bbb;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
 
 h1 {
   font-size: 3.5em;
