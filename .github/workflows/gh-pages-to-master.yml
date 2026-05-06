@@ -1,0 +1,25 @@
+name: "Auto PR from gh-pages to master"
+
+on:
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --base master \
+            --head gh-pages \
+            --title "Sync: Deployment Artifacts (gh-pages) to Master" \
+            --body "Automated PR to sync the latest production build artifacts from gh-pages back into the master branch."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
