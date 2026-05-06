@@ -1,87 +1,119 @@
 import { useState } from 'react'
 
-interface BreachResult {
+interface EmailBreachResult {
   source: string;
   date: string;
   data_leaked: string[];
 }
 
-interface CheckResponse {
+interface EmailCheckResponse {
   is_breached: boolean;
-  breaches: BreachResult[];
+  breaches: EmailBreachResult[];
+  risk_score: number;
+}
+
+interface PasswordCheckResponse {
+  is_pwned: boolean;
+  count: number;
+  message: string;
 }
 
 const Scanner = () => {
-  const [identifier, setIdentifier] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<CheckResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'email' | 'password'>('email');
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [emailResult, setEmailResult] = useState<EmailCheckResponse | null>(null);
+  const [passResult, setPassResult] = useState<PasswordCheckResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCheck = async () => {
-    if (!identifier) return;
-    
+  const handleEmailScan = async () => {
     setLoading(true);
-    setResult(null);
+    setEmailResult(null);
     setError(null);
-    
     try {
-      const response = await fetch(`http://localhost:8000/check?identifier=${encodeURIComponent(identifier)}`, {
-        method: 'POST',
-      });
-      
-      if (!response.ok) {
-        throw new Error('The connection failed. Please try again.');
-      }
-      
-      const data = await response.json();
-      setResult(data);
+      const res = await fetch(`http://localhost:8000/api/v1/check/email?identifier=${encodeURIComponent(input)}`, { method: 'POST' });
+      if (!res.ok) throw new Error('Security service unavailable.');
+      setEmailResult(await res.json());
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+      setError(err instanceof Error ? err.message : 'Scan failed.');
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  const handlePasswordScan = async () => {
+    setLoading(true);
+    setPassResult(null);
+    setError(null);
+    try {
+      const res = await fetch(`http://localhost:8000/api/v1/check/password?password=${encodeURIComponent(input)}`, { method: 'POST' });
+      if (!res.ok) throw new Error('Security service unavailable.');
+      setPassResult(await res.json());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Scan failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="scanner-page">
-      <h2>BREACH SCANNER</h2>
-      <p>Enter your email or username to check for data exposure.</p>
+      <h2>Security Scanner</h2>
       
+      <div className="tab-container">
+        <button className={activeTab === 'email' ? 'active' : ''} onClick={() => {setActiveTab('email'); setInput('');}}>Email Audit</button>
+        <button className={activeTab === 'password' ? 'active' : ''} onClick={() => {setActiveTab('password'); setInput('');}}>Password Vault Check</button>
+      </div>
+
       <div className="card">
         <input 
-          type="text" 
-          placeholder="Email or Username" 
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleCheck()}
+          type={activeTab === 'password' ? 'password' : 'text'} 
+          placeholder={activeTab === 'email' ? 'Enter email address' : 'Enter password to check'} 
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
-        <button onClick={handleCheck} disabled={loading}>
-          {loading ? 'Searching...' : 'Scan'}
+        <button onClick={activeTab === 'email' ? handleEmailScan : handlePasswordScan} disabled={loading}>
+          {loading ? 'Analyzing...' : 'Execute Scan'}
         </button>
 
         {error && <p className="error-message">{error}</p>}
 
-        {result && (
+        {emailResult && (
           <div className="result-container">
-            {result.is_breached ? (
+            {emailResult.is_breached ? (
               <>
-                <p className="pwned-message">Data exposure detected in {result.breaches.length} sources.</p>
-                {result.breaches.map((breach, index) => (
-                  <div key={index} className="breach-item">
-                    <h3>{breach.source}</h3>
-                    <p><strong>Date:</strong> {breach.date}</p>
-                    <p><strong>Leaked:</strong> {breach.data_leaked.join(', ')}</p>
+                <div className="risk-indicator">
+                  <span>Risk Score: </span>
+                  <span className="score" style={{ color: emailResult.risk_score > 50 ? '#ff3e5e' : '#f1c40f' }}>{emailResult.risk_score}%</span>
+                </div>
+                <p className="pwned-message">Identity compromised in {emailResult.breaches.length} documented breaches.</p>
+                {emailResult.breaches.map((b, i) => (
+                  <div key={i} className="breach-item">
+                    <h3>{b.source}</h3>
+                    <p><strong>Date:</strong> {b.date}</p>
+                    <p><strong>Exposed:</strong> {b.data_leaked.join(', ')}</p>
                   </div>
                 ))}
               </>
             ) : (
-              <p className="safe-message">No known data exposure detected for this identifier.</p>
+              <p className="safe-message">No known identity compromises detected for this identifier.</p>
+            )}
+          </div>
+        )}
+
+        {passResult && (
+          <div className="result-container">
+            <p className={passResult.is_pwned ? 'pwned-message' : 'safe-message'}>
+              {passResult.message}
+            </p>
+            {passResult.is_pwned && (
+              <p className="warning-text">This password is unsafe. Please update your credentials immediately.</p>
             )}
           </div>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Scanner;

@@ -90,12 +90,87 @@ body {
   font-size: 0.8rem;
 }
 
-/* Typography for Pages */
-.page-container {
-  max-width: 800px;
-  margin: 0 auto;
+/* Breach Grid */
+.breach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
   text-align: left;
 }
+
+.breach-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(196, 30, 58, 0.1);
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.breach-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.breach-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #c41e3a;
+  font-size: 1.2rem;
+}
+
+.breach-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 1rem;
+}
+
+.breach-desc {
+  font-size: 0.85rem;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+.breach-desc a {
+  color: #ff3e5e;
+  text-decoration: none;
+}
+
+/* Tabs */
+.tab-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.tab-container button {
+  background: transparent;
+  border: 1px solid rgba(196, 30, 58, 0.3);
+  color: #888;
+  margin: 0;
+}
+
+.tab-container button.active {
+  background: #c41e3a;
+  color: #fff;
+  border-color: #c41e3a;
+}
+
+/* Risk Score */
+.risk-indicator {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.warning-text {
+  color: #f1c40f;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
 
 .page-container h2 {
   color: #c41e3a;
