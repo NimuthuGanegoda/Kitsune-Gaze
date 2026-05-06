@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import EmailStr, BaseModel
-from typing import List, Optional
-import random
+from pydantic import BaseModel
+from typing import List
+import httpx
 
 app = FastAPI(title="Kitsune-Gaze API")
 
@@ -29,28 +29,55 @@ async def root():
 
 @app.post("/check", response_model=CheckResponse)
 async def check_breach(identifier: str):
-    # Simulated breach detection logic
-    # In a real app, this would query a database or an external API like HaveIBeenPwned
-    
-    # Just for simulation, let's say identifiers containing 'pwned' are breached
-    if "pwned" in identifier.lower() or random.random() < 0.3:
-        return CheckResponse(
-            is_breached=True,
-            breaches=[
-                BreachResult(
-                    source="Adobe (Simulated)",
-                    date="2013-10-04",
-                    data_leaked=["Email", "Password", "Password hints", "Usernames"]
-                ),
-                BreachResult(
-                    source="Canva (Simulated)",
-                    date="2019-05-24",
-                    data_leaked=["Email", "Names", "Passwords", "Usernames"]
+    # If the user enters a blank identifier
+    if not identifier:
+        return CheckResponse(is_breached=False, breaches=[])
+
+    async with httpx.AsyncClient() as client:
+        try:
+            # We use the breach-analytics endpoint to get detailed information
+            url = f"https://api.xposedornot.com/v1/breach-analytics?email={identifier}"
+            response = await client.get(url, headers={"User-Agent": "Kitsune-Gaze-App"})
+            
+            if response.status_code == 404:
+                # 404 from this API means no breaches found for this email
+                return CheckResponse(is_breached=False, breaches=[])
+                
+            response.raise_for_status()
+            data = response.json()
+            
+            # The API returns details inside 'ExposedBreaches' -> 'breaches_details'
+            exposed_breaches = data.get("ExposedBreaches", {})
+            if not exposed_breaches:
+                return CheckResponse(is_breached=False, breaches=[])
+                
+            breaches_details = exposed_breaches.get("breaches_details", [])
+            
+            results = []
+            for b in breaches_details:
+                # The data_leaked field is a semicolon-separated string
+                leaked_str = b.get("xposed_data", "")
+                leaked_list = [item.strip() for item in leaked_str.split(";") if item.strip()]
+                
+                results.append(
+                    BreachResult(
+                        source=b.get("breach", "Unknown"),
+                        date=str(b.get("xposed_date", "Unknown")),
+                        data_leaked=leaked_list
+                    )
                 )
-            ]
-        )
-    
-    return CheckResponse(is_breached=False, breaches=[])
+            
+            return CheckResponse(
+                is_breached=len(results) > 0,
+                breaches=results
+            )
+            
+        except httpx.HTTPStatusError as e:
+            # If the API returns an error other than 404
+            raise HTTPException(status_code=500, detail=f"External API error: {str(e)}")
+        except httpx.RequestError as e:
+            # If we fail to connect to the external API
+            raise HTTPException(status_code=500, detail="Failed to reach breach detection service.")
 
 if __name__ == "__main__":
     import uvicorn
