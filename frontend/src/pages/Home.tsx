@@ -4,12 +4,12 @@ const Home = () => {
   return (
     <div className="hero-section">
       <h1>KITSUNE GAZE</h1>
-      <p className="hero-subtitle">The watchful eye over your digital soul.</p>
+      <p className="hero-subtitle">Comprehensive digital security for the public.</p>
       <div className="hero-description">
         <p>
           In an age where data is the new currency, your personal information is constantly at risk. 
-          Kitsune-Gaze is a public service designed to pierce the veil of the dark web and reveal where 
-          your data has been exposed.
+          Kitsune-Gaze is a public service designed to identify data breaches and reveal where 
+          your information has been compromised.
         </p>
         <p>
           Born from a commitment to privacy and ethical protection, we provide a free, stateless, 
@@ -17,7 +17,7 @@ const Home = () => {
         </p>
       </div>
       <div className="hero-actions">
-        <Link to="/scan" className="cta-button">Enter the Sanctuary</Link>
+        <Link to="/scan" className="cta-button">Start Scanning</Link>
       </div>
     </div>
   );
