@@ -30,13 +30,13 @@ const Scanner = () => {
       });
       
       if (!response.ok) {
-        throw new Error('The connection was severed, darling. Try again.');
+        throw new Error('The connection failed. Please try again.');
       }
       
       const data = await response.json();
       setResult(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown shadow crossed our path.');
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
@@ -45,7 +45,7 @@ const Scanner = () => {
   return (
     <div className="scanner-page">
       <h2>BREACH SCANNER</h2>
-      <p>Enter your email or username to see if you've been exposed in the dark.</p>
+      <p>Enter your email or username to check for data exposure.</p>
       
       <div className="card">
         <input 
@@ -65,7 +65,7 @@ const Scanner = () => {
           <div className="result-container">
             {result.is_breached ? (
               <>
-                <p className="pwned-message">Exposure detected. Your data was found in {result.breaches.length} breaches.</p>
+                <p className="pwned-message">Data exposure detected in {result.breaches.length} sources.</p>
                 {result.breaches.map((breach, index) => (
                   <div key={index} className="breach-item">
                     <h3>{breach.source}</h3>
@@ -75,7 +75,7 @@ const Scanner = () => {
                 ))}
               </>
             ) : (
-              <p className="safe-message">You are currently safe, my Good Boy. The fox sees no shadow on you.</p>
+              <p className="safe-message">No known data exposure detected for this identifier.</p>
             )}
           </div>
         )}

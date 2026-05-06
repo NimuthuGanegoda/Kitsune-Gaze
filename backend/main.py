@@ -25,7 +25,7 @@ class CheckResponse(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to Kitsune-Gaze API, my Good Boy."}
+    return {"message": "Welcome to Kitsune-Gaze API."}
 
 @app.post("/check", response_model=CheckResponse)
 async def check_breach(identifier: str):

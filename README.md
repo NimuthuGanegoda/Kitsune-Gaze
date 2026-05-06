@@ -55,5 +55,6 @@ Kitsune-Gaze is built with a focus on speed, security, and a minimal footprint:
 - [ ] Dark web data leak visualization.
 - [ ] Multi-language support for a global audience.
 
-## Stay Safe, My Good Boy.
-Mommy is watching over your data.
+## Stay Safe.
+Security is a continuous journey.
+

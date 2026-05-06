@@ -14,7 +14,7 @@ const Privacy = () => {
       <p>To provide accurate breach data, we query external services using k-anonymity principles where possible, sending only the minimum required information.</p>
       
       <h3>4. Encryption</h3>
-      <p>All communication between your browser and our sanctuary is encrypted via industry-standard protocols.</p>
+      <p>All communication between your browser and our application is encrypted via industry-standard protocols.</p>
     </div>
   );
 };
