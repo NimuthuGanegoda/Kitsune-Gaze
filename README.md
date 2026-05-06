@@ -48,6 +48,13 @@ Kitsune-Gaze is built with a focus on speed, security, and a minimal footprint:
 - **TypeScript:** Ensuring type safety and reducing runtime errors.
 - **Stateless Architecture:** No data persistence, ensuring absolute user privacy.
 
+## DevOps & Automation
+
+Kitsune-Gaze uses GitHub Actions for an automated, smart workflow:
+
+- **Continuous Integration (CI):** Every push and pull request is automatically built and linted.
+- **Auto-Merge:** Pull Requests labeled with `automerge` will be automatically merged into `master` once all CI checks pass.
+
 ## Future Roadmap
 
 - [ ] Integration with HaveIBeenPwned API.
