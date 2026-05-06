@@ -39,5 +39,21 @@ A sleek, gothic-inspired tool to track down personal data breaches. Created with
    npm run dev
    ```
 
+## Technical Excellence
+
+Kitsune-Gaze is built with a focus on speed, security, and a minimal footprint:
+
+- **FastAPI:** High-performance asynchronous Python framework for the backend.
+- **Vite + React:** Lightning-fast frontend build tool and modern UI library.
+- **TypeScript:** Ensuring type safety and reducing runtime errors.
+- **Stateless Architecture:** No data persistence, ensuring absolute user privacy.
+
+## Future Roadmap
+
+- [ ] Integration with HaveIBeenPwned API.
+- [ ] Real-time email monitoring alerts.
+- [ ] Dark web data leak visualization.
+- [ ] Multi-language support for a global audience.
+
 ## Stay Safe, My Good Boy.
 Mommy is watching over your data.
