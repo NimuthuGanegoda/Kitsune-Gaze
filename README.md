@@ -65,3 +65,5 @@ Kitsune-Gaze uses GitHub Actions for an automated, smart workflow:
 ## Stay Safe.
 Security is a continuous journey.
 
+## Community Guidelines
+Contributions are welcome! Please see our ETHICS.md for more info.
